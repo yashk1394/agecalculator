@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"> 
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js"></script>
+  <title>Age Calculator</title>
+</head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      width: 320px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    input {
+      width: 80px;
+      padding: 10px;
+      margin: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #222;
+    }
+
+    .error {
+      color: red;
+    }
+  </style>
+
+<body>
+
+  <div class="container">
+    <h2>Age Calculator</h2>
+    <input type="number" id="day" placeholder="Day" min="1" max="31">
+    <input type="number" id="month" placeholder="Month" min="1" max="12">
+    <input type="number" id="year" placeholder="Year" min="1900">
+    <br>
+    <button onclick="calculateAge()">Calculate Age</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function calculateAge() {
+      // DOM Access
+      const day = parseInt(document.getElementById('day').value);
+      const month = parseInt(document.getElementById('month').value) - 1; // JavaScript months are 0-indexed
+      const year = parseInt(document.getElementById('year').value);
+      const result = document.getElementById('result');
+
+      // Input validation
+      if (!day || !month || !year || day < 1 || day > 31 || month < 0 || month > 11 || year < 1900) {
+        result.innerHTML = '<span class="error">Please enter a valid date.</span>';
+        return;
+      }
+
+      const birthDate = new Date(year, month, day);
+      const today = new Date();
+
+      if (birthDate > today) {
+        result.innerHTML = '<span class="error">Birth date cannot be in the future.</span>';
+        return;
+      }
+
+      // Date calculation
+      let ageYears = today.getFullYear() - birthDate.getFullYear();
+      let ageMonths = today.getMonth() - birthDate.getMonth();
+      let ageDays = today.getDate() - birthDate.getDate();
+
+      if (ageDays < 0) {
+        ageMonths--;
+        const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+        ageDays += prevMonth.getDate();
+      }
+
+      if (ageMonths < 0) {
+        ageYears--;
+        ageMonths += 12;
+      }
+
+      // Output
+      result.innerHTML = `You are <strong>${ageYears}</strong> years, 
+                          <strong>${ageMonths}</strong> months, and 
+                          <strong>${ageDays}</strong> days old.`;
+    }
+  </script>
+
+</body>
+</html>
